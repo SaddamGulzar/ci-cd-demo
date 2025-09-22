@@ -6,7 +6,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -15,16 +15,9 @@ jobs:
         run: docker build -t ci-cd-demo:latest .
 
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs: build
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      # Rebuild image in this job too, since jobs don't share state
-      - name: Build Docker image
-        run: docker build -t ci-cd-demo:latest .
-
       - name: Stop and remove old container (if exists)
         run: |
           docker ps -q --filter "name=ci-cd-demo-container" | grep -q . && docker rm -f ci-cd-demo-container || true
@@ -33,7 +26,7 @@ jobs:
         run: docker run -d -p 8082:8082 --name ci-cd-demo-container ci-cd-demo:latest
 
   test:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs: deploy
     steps:
       - name: Wait for container startup
