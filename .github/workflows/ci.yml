@@ -15,7 +15,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Build Docker image
-        run: docker build -t ci-cd-demo:latest .
+        run: docker build -t ci-cd-demo .
 
   deploy:
     name: 🚀 Deploy
@@ -33,7 +33,7 @@ jobs:
 
       - name: Run new container
         run: |
-          docker run -d -p 8082:8082 --name ci-cd-demo-container ci-cd-demo:latest
+          docker run -d -p 8082:8082 --name ci-cd-demo-container ci-cd-demo
 
   test:
     name: ✅ Test
